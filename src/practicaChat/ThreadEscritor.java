@@ -1,22 +1,34 @@
 package practicaChat;
 
-import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.net.Socket;
 
 public class ThreadEscritor {
 	
-	private DataInputStream out;
+	private DataOutputStream out;
 	private Socket cs;
-	private String mensaje;
+	private String clave;
 	
-	public ThreadEscritor(DataInputStream out, Socket cs, String mensaje) {
+	public ThreadEscritor(DataOutputStream out, Socket cs, String clave) {
 		super();
 		this.out = out;
 		this.cs = cs;
-		this.mensaje = mensaje;
+		this.clave = clave;
 	}
 	
-	
+	public void run() {
+		try {
+			String comando;
+			out.writeUTF(clave);
+			
+			
+		} catch (Exception e) {
+			
+			
+		}
+		
+		
+	}
 	
 	
 }

@@ -7,7 +7,7 @@ import java.io.IOException;
 public class ServidorChat extends Conexion{
 
 	public ServidorChat() throws IOException {
-		super("servidor");
+		super("servidorChat");
 	}
 	
 	public void startServer() {
@@ -17,6 +17,8 @@ public class ServidorChat extends Conexion{
 				DataInputStream inClienteChat = new DataInputStream(cs.getInputStream());
 				DataOutputStream outClienteChat = new DataOutputStream(cs.getOutputStream());
 				String clave = (inClienteChat.readUTF());
+				
+				System.out.println(clave);
 				outClienteChat.writeUTF("1234");
 			}
 		} catch (Exception e) {

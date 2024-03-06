@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class Cliente extends Conexion{
 
 	public Cliente() throws IOException {
-		super("clienteLinda");
+		super("cliente");
 	}
 	
 	public void startClient() throws InterruptedException {
@@ -17,9 +17,9 @@ public class Cliente extends Conexion{
 			DataInputStream in = new DataInputStream(cs.getInputStream());
 			DataOutputStream out = new DataOutputStream(cs.getOutputStream());
 			
-			ThreadEscritor threadW;
-			ThreadLector threadR;
-			
+			out.writeUTF("hola");
+			String clave = in.readUTF();
+			System.out.println(clave);
 			
 			while(true) {
 				String mensaje;
