@@ -4,12 +4,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class ServidorChat extends Conexion{
+public class ServidorChat extends Conexion {
 
 	public ServidorChat() throws IOException {
 		super("servidorChat");
 	}
-	
+
 	public void startServer() {
 		try {
 			int id = 1;

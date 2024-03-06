@@ -2,8 +2,9 @@ package practicaChat;
 
 import java.io.DataInputStream;
 import java.net.Socket;
+import java.util.Scanner;
 
-public class ThreadLector {
+public class ThreadLector extends Thread{
 	
 	private DataInputStream in;
 	private Socket cs;
@@ -14,6 +15,16 @@ public class ThreadLector {
 		this.cs = cs;
 	}
 	
-	
+	public void run() {
+		try {
+			System.out.println(in.readUTF());
+			
+		} catch (Exception e) {
+			
+			
+		}
+		
+		
+	}
 	
 }
