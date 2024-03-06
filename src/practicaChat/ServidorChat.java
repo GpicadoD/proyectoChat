@@ -12,14 +12,14 @@ public class ServidorChat extends Conexion{
 	
 	public void startServer() {
 		try {
+			int id = 1;
 			while (true) {
 				cs = ss.accept();
 				DataInputStream inClienteChat = new DataInputStream(cs.getInputStream());
 				DataOutputStream outClienteChat = new DataOutputStream(cs.getOutputStream());
-				String clave = (inClienteChat.readUTF());
-				
-				System.out.println(clave);
-				outClienteChat.writeUTF("1234");
+				ThreadChat tChat =  new ThreadChat(inClienteChat, outClienteChat, id, cs);
+				tChat.run();
+				id++;
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
