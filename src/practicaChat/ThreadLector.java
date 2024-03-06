@@ -17,14 +17,11 @@ public class ThreadLector extends Thread{
 	
 	public void run() {
 		try {
-			System.out.println(in.readUTF());
-			
+			while(true) {
+				System.out.println(in.readUTF());
+			}
 		} catch (Exception e) {
 			
-			
 		}
-		
-		
 	}
-	
 }
