@@ -7,7 +7,7 @@ public class MainCliente {
 	public static void main(String[] args) throws IOException {
 		System.out.println("CLIENTE");
 		System.out.println("*******************************");
-		Cliente cli = new Cliente(); // Se crea el cliente
+		Cliente cli = new Cliente();
 		System.out.println("Iniciando cliente\n");
 		try {
 			cli.startClient();

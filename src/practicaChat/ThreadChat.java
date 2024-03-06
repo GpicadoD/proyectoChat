@@ -34,6 +34,7 @@ public class ThreadChat extends Thread {
 			String clave = (in.readUTF());
 			System.out.println(clave);
 			out.writeUTF("1234");
+			out.writeUTF("Mensaje a thread");
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
