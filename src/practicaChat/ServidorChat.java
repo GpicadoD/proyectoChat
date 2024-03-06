@@ -4,12 +4,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class ServidorChat extends Conexion{
+public class ServidorChat extends Conexion {
 
 	public ServidorChat() throws IOException {
 		super("servidorChat");
 	}
-	
+
 	public void startServer() {
 		try {
 			while (true) {
@@ -17,9 +17,12 @@ public class ServidorChat extends Conexion{
 				DataInputStream inClienteChat = new DataInputStream(cs.getInputStream());
 				DataOutputStream outClienteChat = new DataOutputStream(cs.getOutputStream());
 				String clave = (inClienteChat.readUTF());
-				
+
 				System.out.println(clave);
 				outClienteChat.writeUTF("1234");
+
+				System.out.println(inClienteChat.readUTF());
+				outClienteChat.writeUTF("Mensaje desde servidor para threadR");
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
