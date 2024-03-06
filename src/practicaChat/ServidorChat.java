@@ -21,7 +21,7 @@ public class ServidorChat extends Conexion {
 				System.out.println(clave);
 				outClienteChat.writeUTF("1234");
 
-				System.out.println(inClienteChat.readUTF());
+				System.out.println("Mensaje de threadW" + inClienteChat.readUTF());
 				outClienteChat.writeUTF("Mensaje desde servidor para threadR");
 			}
 		} catch (Exception e) {
