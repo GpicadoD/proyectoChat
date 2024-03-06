@@ -1,0 +1,19 @@
+package practicaChat;
+
+import java.io.DataInputStream;
+import java.net.Socket;
+
+public class ThreadLector {
+	
+	private DataInputStream in;
+	private Socket cs;
+	
+	public ThreadLector(DataInputStream in, Socket cs) {
+		super();
+		this.in = in;
+		this.cs = cs;
+	}
+	
+	
+	
+}
