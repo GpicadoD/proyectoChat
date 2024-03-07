@@ -80,21 +80,21 @@ public class ThreadChat extends Thread {
 		try {
 			RSACipher();
 			String publicKeyStr = Base64.getEncoder().encodeToString(publickey.getEncoded());
-			String clave = in.readUTF();
-//			PublicKey clave = (PublicKey) (in.readObject());
-			System.out.println("Recibida Clave");
+//			String clave = (String) in.readObject();
+			PublicKey clave = (PublicKey) (in.readObject());
+			System.out.println("Recibida Clave: " + clave);
 
-			System.out.println("Public key desde el server: ");
-			out.writeUTF(publicKeyStr);
-
+			System.out.println("Public key desde el server: " + this.publickey);
+			out.writeObject(this.publickey);
+//
 			while (true) {
-				String mensaje = in.readUTF();
+				String mensaje = (String) in.readObject();
 				String encyptMensaje;
 				System.out.println(mensaje);
 				
-//				encyptMensaje = encrypt(mensaje,clave);
-				System.out.println("Mensaje enciptado : " + mensaje); 
-				out.writeUTF(mensaje);
+				encyptMensaje = encrypt(mensaje,clave);
+				System.out.println("Mensaje enciptado : " + encyptMensaje); 
+				out.writeObject(encyptMensaje);
 
 			}
 

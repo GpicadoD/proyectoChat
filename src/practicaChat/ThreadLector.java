@@ -35,7 +35,7 @@ public class ThreadLector extends Thread {
     public void run() {
         try {
             while (true) {
-                String mensaje = in.readUTF();
+                String mensaje = (String) in.readObject();
                 System.out.println("MENSAJE: " + mensaje);
                 System.out.println(decrypt(mensaje)); 
 //                System.out.println("MENSAJE DESCIFRADO: " + parsedMensaje);

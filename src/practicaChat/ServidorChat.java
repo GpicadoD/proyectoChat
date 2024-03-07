@@ -18,10 +18,9 @@ public class ServidorChat extends Conexion {
 				cs = ss.accept();
 				ObjectOutputStream outClienteChat = new ObjectOutputStream(cs.getOutputStream());
 				ObjectInputStream inClienteChat = new ObjectInputStream(cs.getInputStream());
-//				ThreadChat tChat =  new ThreadChat(inClienteChat, outClienteChat, id, cs);
-//				System.out.println("prerun");
-//				tChat.run();
-//				id++;
+				ThreadChat tChat =  new ThreadChat(inClienteChat, outClienteChat, id, cs);
+				tChat.run();
+				id++;
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

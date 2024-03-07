@@ -2,15 +2,16 @@ package practicaChat;
 
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.security.PublicKey;
 import java.util.Scanner;
 
 public class ThreadEscritor extends Thread {
 
 	private ObjectOutputStream out;
 	private Socket cs;
-	private String clave;
+	private PublicKey clave;
 
-	public ThreadEscritor(ObjectOutputStream out, Socket cs, String clave) {
+	public ThreadEscritor(ObjectOutputStream out, Socket cs, PublicKey clave) {
 		super();
 		this.out = out;
 		this.cs = cs;
@@ -33,17 +34,17 @@ public class ThreadEscritor extends Thread {
 				if (mensaje.contains("CREATE") || mensaje.contains("LIST") || mensaje.contains("JOIN")) {
 
 					if (parsedMensaje[0].equalsIgnoreCase("LIST")) {
-						out.writeUTF(mensaje);
+						out.writeObject(mensaje);
 
 					} else if (parsedMensaje[0].equalsIgnoreCase("JOIN")) {
 
-						out.writeUTF(mensaje);
+						out.writeObject(mensaje);
 
 					} else if (parsedMensaje[0].equalsIgnoreCase("CREATE")) {
 
 						if (parsedMensaje.length > 1 && parsedMensaje.length < 3) {
 							if (!parsedMensaje[1].contains("#")) {
-								out.writeUTF(mensaje);
+								out.writeObject(mensaje);
 							}
 						} else {
 							System.out.println("El mensaje no se reconoce");

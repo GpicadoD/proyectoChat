@@ -18,43 +18,43 @@ public class Cliente extends Conexion {
 		super("cliente");
 	}
 	
-//	public void RSACipher() {
-//		try {
-//			KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
-//			generator.initialize(2048);
-//			KeyPair pair = generator.generateKeyPair();
-//			this.privateKey = pair.getPrivate();
-//			this.publicKey = pair.getPublic();
-//			
-//		} catch (NoSuchAlgorithmException e) {
-//			e.printStackTrace();
-//		}	
-//	}
-	
-	
-	
-	public void startClient(){
+	public void RSACipher() {
 		try {
+			KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
+			generator.initialize(2048);
+			KeyPair pair = generator.generateKeyPair();
+			this.privateKey = pair.getPrivate();
+			this.publicKey = pair.getPublic();
 			
-			ObjectInputStream in = new ObjectInputStream(cs.getInputStream());
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}	
+	}
+	
+	
+	
+	public void startClient() throws ClassNotFoundException{
+		try {
 			ObjectOutputStream out = new ObjectOutputStream(cs.getOutputStream());
+			ObjectInputStream in = new ObjectInputStream(cs.getInputStream());
+			
 			System.out.println("Conexión establecida");
 			//AQUÍ SE DEBERÍA CREAR LA CLAVE
-//			RSACipher();
-//			String publicKeyStr = Base64.getEncoder().encodeToString(publicKey.getEncoded());
-//            
+			RSACipher();
+			String publicKeyStr = Base64.getEncoder().encodeToString(publicKey.getEncoded());
+            
 //            // Enviar la clave pública al servidor
-//            out.writeUTF(publicKeyStr);
-//            System.out.println(publicKeyStr);
+            out.writeObject(this.publicKey);
+            System.out.println(this.publicKey);
 //            
-//			String clave = in.readUTF();
-//			System.out.println("PublicKeyServer: " + clave);
+            PublicKey clave = (PublicKey) (in.readObject());
+			System.out.println("PublicKeyServer: " + clave);
 
-//			ThreadEscritor threadW = new ThreadEscritor(out, cs, clave);
-//			ThreadLector threadR = new ThreadLector(in, cs,privateKey);
-//
-//			threadW.start();
-//			threadR.start();
+			ThreadEscritor threadW = new ThreadEscritor(out, cs, clave);
+			ThreadLector threadR = new ThreadLector(in, cs,privateKey);
+
+			threadW.start();
+			threadR.start();
 
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
