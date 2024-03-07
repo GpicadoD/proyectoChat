@@ -1,8 +1,8 @@
 package practicaChat;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class ServidorChat extends Conexion {
 
@@ -14,12 +14,14 @@ public class ServidorChat extends Conexion {
 		try {
 			int id = 1;
 			while (true) {
+				System.out.println("Esperando");
 				cs = ss.accept();
-				DataInputStream inClienteChat = new DataInputStream(cs.getInputStream());
-				DataOutputStream outClienteChat = new DataOutputStream(cs.getOutputStream());
-				ThreadChat tChat =  new ThreadChat(inClienteChat, outClienteChat, id, cs);
-				tChat.run();
-				id++;
+				ObjectOutputStream outClienteChat = new ObjectOutputStream(cs.getOutputStream());
+				ObjectInputStream inClienteChat = new ObjectInputStream(cs.getInputStream());
+//				ThreadChat tChat =  new ThreadChat(inClienteChat, outClienteChat, id, cs);
+//				System.out.println("prerun");
+//				tChat.run();
+//				id++;
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

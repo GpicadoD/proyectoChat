@@ -1,16 +1,16 @@
 package practicaChat;
 
-import java.io.DataOutputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Scanner;
 
 public class ThreadEscritor extends Thread {
 
-	private DataOutputStream out;
+	private ObjectOutputStream out;
 	private Socket cs;
 	private String clave;
 
-	public ThreadEscritor(DataOutputStream out, Socket cs, String clave) {
+	public ThreadEscritor(ObjectOutputStream out, Socket cs, String clave) {
 		super();
 		this.out = out;
 		this.cs = cs;
@@ -23,28 +23,29 @@ public class ThreadEscritor extends Thread {
 			String mensaje;
 			String parsedMensaje[];
 			System.out.println("clave en el thread " + clave);
-			while(true) {
+			
+			while (true) {
+				
 				System.out.print("Comando > ");
 				mensaje = entrada.nextLine();
 				parsedMensaje = mensaje.split(" ");
 
 				if (mensaje.contains("CREATE") || mensaje.contains("LIST") || mensaje.contains("JOIN")) {
-					
+
 					if (parsedMensaje[0].equalsIgnoreCase("LIST")) {
-						
 						out.writeUTF(mensaje);
-						
+
 					} else if (parsedMensaje[0].equalsIgnoreCase("JOIN")) {
-						
+
 						out.writeUTF(mensaje);
-						
+
 					} else if (parsedMensaje[0].equalsIgnoreCase("CREATE")) {
-						
+
 						if (parsedMensaje.length > 1 && parsedMensaje.length < 3) {
-							if(!parsedMensaje[1].contains("#")) {
+							if (!parsedMensaje[1].contains("#")) {
 								out.writeUTF(mensaje);
 							}
-						}else {
+						} else {
 							System.out.println("El mensaje no se reconoce");
 						}
 					}
@@ -52,7 +53,6 @@ public class ThreadEscritor extends Thread {
 					System.out.println("El mensaje no se reconoce");
 				}
 			}
-			
 
 		} catch (Exception e) {
 
