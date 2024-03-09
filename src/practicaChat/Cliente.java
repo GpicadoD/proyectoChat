@@ -54,6 +54,7 @@ public class Cliente extends Conexion {
 			threadR.start();
 
 		} catch (IOException e) {
+			System.out.println("asdsad");
 			System.out.println(e.getMessage());
 		}
 	}
