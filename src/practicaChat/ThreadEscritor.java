@@ -12,19 +12,19 @@ public class ThreadEscritor extends Thread {
 
 	private ObjectOutputStream out;
 	private Socket cs;
-	private PublicKey clave;
+	private PublicKey serverPublicKey;
 
-	public ThreadEscritor(ObjectOutputStream out, Socket cs, PublicKey clave) {
+	public ThreadEscritor(ObjectOutputStream out, Socket cs, PublicKey serverPublicKey) {
 		super();
 		this.out = out;
 		this.cs = cs;
-		this.clave = clave;
+		this.serverPublicKey = serverPublicKey;
 	}
 
-	public String encrypt(String mensaje, PublicKey clave) throws Exception {
+	public String encrypt(String mensaje, PublicKey serverPublicKey) throws Exception {
 
 		Cipher cipher = Cipher.getInstance("RSA");
-		cipher.init(Cipher.ENCRYPT_MODE, clave);
+		cipher.init(Cipher.ENCRYPT_MODE, serverPublicKey);
 		byte[] encryptedBytes = cipher.doFinal(mensaje.getBytes());
 		return Base64.getEncoder().encodeToString(encryptedBytes);
 	}
@@ -35,10 +35,8 @@ public class ThreadEscritor extends Thread {
 			String mensaje;
 			String parsedMensaje[];
 			String encyptMensaje;
-//			System.out.println("clave en el thread " + clave);
 
 			while (true) {
-
 				System.out.print("Comando > ");
 				mensaje = entrada.nextLine();
 				parsedMensaje = mensaje.split(" ");
@@ -46,18 +44,18 @@ public class ThreadEscritor extends Thread {
 					if (mensaje.contains("CREATE") || mensaje.contains("LIST") || mensaje.contains("JOIN")) {
 
 						if (parsedMensaje[0].equalsIgnoreCase("LIST")) {
-							encyptMensaje = encrypt(mensaje, clave);
+							encyptMensaje = encrypt(mensaje, serverPublicKey);
 							out.writeObject(encyptMensaje);
 
 						} else if (parsedMensaje[0].equalsIgnoreCase("JOIN")) {
-							encyptMensaje = encrypt(mensaje, clave);
+							encyptMensaje = encrypt(mensaje, serverPublicKey);
 							out.writeObject(encyptMensaje);
 
 						} else if (parsedMensaje[0].equalsIgnoreCase("CREATE")) {
 
 							if (parsedMensaje.length > 1 && parsedMensaje.length < 4) {
 								if (!parsedMensaje[1].contains("#")) {
-									encyptMensaje = encrypt(mensaje, clave);
+									encyptMensaje = encrypt(mensaje, serverPublicKey);
 									out.writeObject(encyptMensaje);
 								}
 							}

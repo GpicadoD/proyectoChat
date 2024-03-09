@@ -38,20 +38,17 @@ public class Cliente extends Conexion {
 			ObjectOutputStream out = new ObjectOutputStream(cs.getOutputStream());
 			ObjectInputStream in = new ObjectInputStream(cs.getInputStream());
 			
-			System.out.println("Conexión establecida");
-			//AQUÍ SE DEBERÍA CREAR LA CLAVE
+			System.out.println("Conexión establecida con el servidor");
+			
 			RSACipher();
-			String publicKeyStr = Base64.getEncoder().encodeToString(publicKey.getEncoded());
-            
-//            // Enviar la clave pública al servidor
+			
             out.writeObject(this.publicKey);
-//            System.out.println(this.publicKey);
-//            
-            PublicKey clave = (PublicKey) (in.readObject());
-//			System.out.println("PublicKeyServer: " + clave);
+            
+            PublicKey serverPublicKey = (PublicKey) (in.readObject());
 
-			ThreadEscritor threadW = new ThreadEscritor(out, cs, clave);
-			ThreadLector threadR = new ThreadLector(in, cs,privateKey);
+
+			ThreadEscritor threadW = new ThreadEscritor(out, cs, serverPublicKey);
+			ThreadLector threadR = new ThreadLector(in, cs, privateKey);
 
 			threadW.start();
 			threadR.start();

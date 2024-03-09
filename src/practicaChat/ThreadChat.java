@@ -1,7 +1,6 @@
 package practicaChat;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -27,7 +26,7 @@ import javax.crypto.NoSuchPaddingException;
  * Clase Thread, que gestiona las acciones del Cliente con el que establece
  * conexión
  * 
- * @author GeancarlosPicado
+ * @author GeancarlosPicado y Javier Oliván
  *
  */
 public class ThreadChat extends Thread {
@@ -37,12 +36,14 @@ public class ThreadChat extends Thread {
 	private Socket cs;
 	private PrivateKey privatekey;
 	private PublicKey publickey;
+	private Semaphore s1;
 
-	public ThreadChat(ObjectInputStream in, ObjectOutputStream out, int id, Socket cs) {
+	public ThreadChat(ObjectInputStream in, ObjectOutputStream out, int id, Socket cs, Semaphore s1) {
 		this.in = in;
 		this.out = out;
 		this.id = id;
 		this.cs = cs;
+		this.s1 = s1;
 	}
 
 	public void RSACipher() {
@@ -61,10 +62,10 @@ public class ThreadChat extends Thread {
 	public static PublicKey bytesToPublicKey(byte[] keyBytes) throws NoSuchAlgorithmException, InvalidKeySpecException {
 		KeyFactory keyFactory = KeyFactory.getInstance("RSA"); // O el algoritmo correspondiente
 
-		// Construye la especificación de la clave a partir de los bytes
+		// Construye la especificación de la clientPublicKey a partir de los bytes
 		X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
 
-		// Genera la clave pública a partir de la especificación de la clave
+		// Genera la clientPublicKey pública a partir de la especificación de la clientPublicKey
 		return keyFactory.generatePublic(keySpec);
 	}
 
@@ -77,12 +78,16 @@ public class ThreadChat extends Thread {
 		return new String(cipher.doFinal(mensajeBytes));
 	}
 
-	public String encrypt(String mensaje, PublicKey clave) throws Exception {
+	public String encrypt(String mensaje, PublicKey clientPublicKey) throws Exception {
 
 		Cipher cipher = Cipher.getInstance("RSA");
-		cipher.init(Cipher.ENCRYPT_MODE, clave);
+		cipher.init(Cipher.ENCRYPT_MODE, clientPublicKey);
 		byte[] encryptedBytes = cipher.doFinal(mensaje.getBytes());
 		return Base64.getEncoder().encodeToString(encryptedBytes);
+	}
+	
+	public String randomCode () {
+		return "";
 	}
 
 	/*
@@ -92,16 +97,13 @@ public class ThreadChat extends Thread {
 		try {
 
 			RSACipher();
-			ArrayList<Sala> salas = new ArrayList<Sala>();
-			ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
+			
+			ArrayList<Sala> roomList = new ArrayList<Sala>();
 
 			String publicKeyStr = Base64.getEncoder().encodeToString(publickey.getEncoded());
 
-//			String clave = (String) in.readObject();
-			PublicKey clave = (PublicKey) (in.readObject());
-//			System.out.println("Recibida Clave: " + clave);
+			PublicKey clientPublicKey = (PublicKey) (in.readObject());
 
-//			System.out.println("Public key desde el server: " + this.publickey);
 			out.writeObject(this.publickey);
 
 			while (true) {
@@ -110,70 +112,69 @@ public class ThreadChat extends Thread {
 				String[] parsedMensaje;
 				String decryptedMensaje;
 
-//				System.out.println("MENSAJE ENCR: " + mensaje);
 				decryptedMensaje = decrypt(mensaje);
 				parsedMensaje = decryptedMensaje.split(" ");
-
-				if (parsedMensaje[0].equalsIgnoreCase("CREATE")) {
-
-					if (parsedMensaje.length == 2) {
-
-						salas.add(new Sala(parsedMensaje[1], null, usuarios));
-						System.out.println("Se ha creado una sala con nombre: " + parsedMensaje[1]);
-
-					} else {
-						salas.add(new Sala(parsedMensaje[1], parsedMensaje[2], usuarios));
-						System.out.println("Se ha creado una sala con nombre: " + parsedMensaje[1]
-								+ " con la contraseña " + parsedMensaje[2]);
-					}
-
-				} else if (parsedMensaje.length == 1 && parsedMensaje[0].equalsIgnoreCase("LIST")) {
-
-					for (Sala contenido : salas) {
-						System.out.println("- " + contenido.getNombre() + " users " + contenido.getUsesrList());
-					}
-					System.out.println("Lista de todas las salas");
-
-				} else if (parsedMensaje[0].equalsIgnoreCase("JOIN") && parsedMensaje.length < 4) {
-					Usuario nuevoUsuario = new Usuario(out, publicKeyStr);
-					usuarios.add(nuevoUsuario);
-
-					if (parsedMensaje.length == 2) {
-						for (Sala contenido : salas) {
-
-							if (contenido.getNombre().equals(parsedMensaje[1])) {
-								contenido.getUsesrList().add(nuevoUsuario);
-							}
-						}
-						System.out.println("te has unido a la sala " + parsedMensaje[1]);
-					} else {
-
-						for (Sala contenido : salas) {
-							if (contenido.getClave() == null) {
-								System.out.println("No existe una sala con esa contraseña");
-							} else {
-								if (contenido.getNombre().equals(parsedMensaje[1])
-										&& contenido.getClave().equals(parsedMensaje[2])) {
-									contenido.getUsesrList().add(nuevoUsuario);
-								}
-								System.out.println("te has unido a la sala " + parsedMensaje[1] + " con la contraseña "
-										+ parsedMensaje[2]);
-							}
-						}
-					}
-				}
-//				encyptMensaje = encrypt(mensaje, clave);
-
-//				encyptMensaje = decrypt(mensaje);
-
-//				for (String e : parsedMensaje) {
-//					System.out.println(e);
+				
+				out.writeObject(encrypt(decryptedMensaje, clientPublicKey));
+				out.writeObject(encrypt(decryptedMensaje, clientPublicKey));
+//				if (parsedMensaje[0].equalsIgnoreCase("CREATE")) {
+//
+//					if (parsedMensaje.length == 2) {
+//						
+//						Sala room = new Sala(parsedMensaje[1] + "#" + randomCode(), null, new ArrayList<Usuario>());
+//						s1.acquire();
+//						roomList.add(room);
+//						s1.release();
+//						System.out.println("Se ha creado una room con nombre: " + room.getNombre());
+//
+//					} else {
+//						Sala room = new Sala(parsedMensaje[1] + "#" + randomCode(), parsedMensaje[2], new ArrayList<Usuario>());
+//						roomList.add(room);
+//						System.out.println("Se ha creado una room con nombre: " + room.getNombre()
+//								+ " con la contraseña " + room.getClave());
+//					}
+//
+//				} else if (parsedMensaje.length == 1 && parsedMensaje[0].equalsIgnoreCase("LIST")) {
+//					System.out.println("Lista de salas publicas: ");
+//					for (Sala room : roomList) {
+//						if (room.getClave() != null) {
+//							System.out.println("- " + room.getNombre() + " users " + room.getUsesrList().size());
+//						}
+//					}
+//
+//				} else if (parsedMensaje[0].equalsIgnoreCase("JOIN")) {
+//					Usuario nuevoUsuario = new Usuario(out, publicKeyStr);
+//
+//					if (parsedMensaje.length == 2) {
+//						for (Sala room : roomList) {
+//
+//							if (room.getNombre().equals(parsedMensaje[1])) {
+//								
+//								room.getUsesrList().add(nuevoUsuario);
+//								
+//							}
+//						}
+//						System.out.println("te has unido a la room " + parsedMensaje[1]);
+//					} else {
+//						for (Sala room : roomList) {
+//							if (room.getNombre().equals(parsedMensaje[1]) && room.getClave().equals(parsedMensaje[2])) {
+//								room.getUsesrList().add(nuevoUsuario);
+//							} else {
+//								System.out.println("No se ha podido unir a la sala");
+//								out.writeObject(encrypt("No se ha podido unir a la sala", clientPublicKey));
+//							}
+//							
+//							
+//							
+//								if (room.getNombre().equals(parsedMensaje[1])
+//										&& room.getClave().equals(parsedMensaje[2])) {
+//									room.getUsesrList().add(nuevoUsuario);
+//								}
+//								System.out.println("te has unido a la room " + parsedMensaje[1] + " con la contraseña "
+//										+ parsedMensaje[2]);
+//						}
+//					}
 //				}
-//				
-
-//				System.out.println("Mensaje enciptado : " + encyptMensaje);
-				out.writeObject("hola");
-
 			}
 
 		} catch (Exception e) {

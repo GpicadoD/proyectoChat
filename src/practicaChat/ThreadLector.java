@@ -28,7 +28,6 @@ public class ThreadLector extends Thread {
         byte[] mensajeBytes = Base64.getDecoder().decode(mensaje);
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, this.privateKey);
-//        System.out.println("PRIVATE : " + this.privateKey);
         return new String(cipher.doFinal(mensajeBytes));
     }
 
@@ -36,9 +35,7 @@ public class ThreadLector extends Thread {
         try {
             while (true) {
                 String mensaje = (String) in.readObject();
-                System.out.println("MENSAJE: " + mensaje);
                 System.out.println(decrypt(mensaje)); 
-//                System.out.println("MENSAJE DESCIFRADO: " + parsedMensaje);
             }
         } catch (Exception e) {
             System.out.println(e);
