@@ -151,7 +151,7 @@ public class ThreadChat extends Thread {
 					} else {
 						String respuesta = "";
 						for (Sala room : roomList) {
-							if (room.getClave() != null) {
+							if (room.getClave() == null) {
 								respuesta =  respuesta + ("- " + room.getNombre() + " users "
 										+ room.getUsesrList().size() + "\n");
 							}
@@ -173,7 +173,7 @@ public class ThreadChat extends Thread {
 
 							}
 						}
-						System.out.println("te has unido a la room " + parsedMensaje[1]);
+						out.writeObject(encrypt("te has unido a la room " + parsedMensaje[1],clientPublicKey)) ;
 					} else {
 						for (Sala room : roomList) {
 							if (room.getNombre().equals(parsedMensaje[1])
