@@ -181,8 +181,6 @@ public class ThreadChat extends Thread {
 								room.getUsesrList().add(nuevoUsuario);
 							} else {
 								out.writeObject(encrypt("No se ha podido unir a la sala",clientPublicKey)); 
-								out.writeObject(
-										encrypt("No se ha podido unir a la sala", clientPublicKey));
 							}
 
 							if (room.getNombre().equals(parsedMensaje[1])
