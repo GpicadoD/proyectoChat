@@ -13,6 +13,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Base64;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.ThreadLocalRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
@@ -88,8 +89,20 @@ public class ThreadChat extends Thread {
 		return Base64.getEncoder().encodeToString(encryptedBytes);
 	}
 
+	public static int numeroAleatorioEnRango(int minimo, int maximo) {
+		return ThreadLocalRandom.current().nextInt(minimo, maximo + 1);
+	}
+
 	public String randomCode() {
-		return "";
+		String banco = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+		String cadena = "";
+		int longitud = 5;
+		for (int x = 0; x < longitud; x++) {
+			int indiceAleatorio = numeroAleatorioEnRango(0, banco.length() - 1);
+			char caracterAleatorio = banco.charAt(indiceAleatorio);
+			cadena += caracterAleatorio;
+		}
+		return cadena;
 	}
 
 	/*
@@ -97,15 +110,10 @@ public class ThreadChat extends Thread {
 	 */
 	public void run() {
 		try {
-
 			RSACipher();
-
 			ArrayList<Sala> roomList = new ArrayList<Sala>();
-
 			String publicKeyStr = Base64.getEncoder().encodeToString(publickey.getEncoded());
-
 			PublicKey clientPublicKey = (PublicKey) (in.readObject());
-
 			out.writeObject(this.publickey);
 
 			while (true) {
@@ -132,12 +140,12 @@ public class ThreadChat extends Thread {
 						Sala room = new Sala(parsedMensaje[1] + "#" + randomCode(),
 								parsedMensaje[2], new ArrayList<Usuario>());
 						roomList.add(room);
-						System.out.println("Se ha creado una room con nombre: " + room.getNombre()
-								+ " con la contraseña " + room.getClave());
+						out.writeObject(encrypt("Se ha creado una room con nombre: " + room.getNombre()
+						+ " con la contraseña " + room.getClave(),clientPublicKey)) ;
 					}
 
 				} else if (parsedMensaje.length == 1 && parsedMensaje[0].equalsIgnoreCase("LIST")) {
-					System.out.println("Lista de salas publicas: ");
+					out.writeObject(encrypt("Lista de salas publicas: ",clientPublicKey));
 					if (roomList.size() == 0) {
 						out.writeObject(encrypt("No hay salas publicas disponibles", clientPublicKey));
 					} else {
@@ -172,7 +180,7 @@ public class ThreadChat extends Thread {
 									&& room.getClave().equals(parsedMensaje[2])) {
 								room.getUsesrList().add(nuevoUsuario);
 							} else {
-								System.out.println("No se ha podido unir a la sala");
+								out.writeObject(encrypt("No se ha podido unir a la sala",clientPublicKey)); 
 								out.writeObject(
 										encrypt("No se ha podido unir a la sala", clientPublicKey));
 							}
@@ -181,8 +189,8 @@ public class ThreadChat extends Thread {
 									&& room.getClave().equals(parsedMensaje[2])) {
 								room.getUsesrList().add(nuevoUsuario);
 							}
-							System.out.println("te has unido a la room " + parsedMensaje[1]
-									+ " con la contraseña " + parsedMensaje[2]);
+							out.writeObject(encrypt("te has unido a la room " + parsedMensaje[1]
+									+ " con la contraseña " + parsedMensaje[2],clientPublicKey)) ;
 						}
 					}
 				}
