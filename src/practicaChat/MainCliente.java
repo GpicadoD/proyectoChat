@@ -10,7 +10,6 @@ public class MainCliente {
 			System.out.println("*******************************");
 			Cliente cli = new Cliente();
 			System.out.println("Iniciando cliente\n");
-
 			cli.startClient();
 		} catch (ClassNotFoundException | IOException e) {
 			System.out.println("Ha ocurrido un fallo en la conexion");

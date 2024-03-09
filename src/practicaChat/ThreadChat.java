@@ -37,14 +37,16 @@ public class ThreadChat extends Thread {
 	private PrivateKey privatekey;
 	private PublicKey publickey;
 	private Semaphore s1;
+	private ArrayList<Sala> roomList;
 
 	public ThreadChat(ObjectInputStream in, ObjectOutputStream out, int id, Socket cs,
-			Semaphore s1) {
+			Semaphore s1, ArrayList<Sala> roomList) {
 		this.in = in;
 		this.out = out;
 		this.id = id;
 		this.cs = cs;
 		this.s1 = s1;
+		this.roomList = roomList;
 	}
 
 	public void RSACipher() {
@@ -111,7 +113,7 @@ public class ThreadChat extends Thread {
 	public void run() {
 		try {
 			RSACipher();
-			ArrayList<Sala> roomList = new ArrayList<Sala>();
+			
 			String publicKeyStr = Base64.getEncoder().encodeToString(publickey.getEncoded());
 			PublicKey clientPublicKey = (PublicKey) (in.readObject());
 			out.writeObject(this.publickey);
