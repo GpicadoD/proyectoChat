@@ -12,4 +12,3 @@ public class MainServidorChat {
 		serv.startServer(); // Se inicia el servidor
 	}
 }
-	

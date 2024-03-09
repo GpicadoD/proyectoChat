@@ -1,5 +1,6 @@
 package practicaChat;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Sala {
@@ -44,6 +45,16 @@ public class Sala {
 	@Override
 	public String toString() {
 		return "Sala [nombre=" + nombre + ", clave=" + clave + ", usesrList=" + usesrList + "]";
+	}
+	
+	public void exitRoom() {
+		
+	}
+	
+	public void broadcastMessage(Usuario sender, String message) throws IOException {
+		for (Usuario user : usesrList) {
+			if (user != sender) user.getOut().writeObject(message);
+		}
 	}
 
 }

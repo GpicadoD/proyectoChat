@@ -7,6 +7,7 @@ import java.util.Base64;
 import java.util.Scanner;
 import java.security.*;
 import javax.crypto.*;
+import java.net.SocketException;
 
 
 public class Cliente extends Conexion {
@@ -33,10 +34,13 @@ public class Cliente extends Conexion {
 	
 	
 	
-	public void startClient() throws ClassNotFoundException{
+	public void startClient() throws ClassNotFoundException, SocketException{
 		try {
+			System.out.println("Asdad");
 			ObjectOutputStream out = new ObjectOutputStream(cs.getOutputStream());
+			System.out.println("sadas");
 			ObjectInputStream in = new ObjectInputStream(cs.getInputStream());
+			System.out.println("21Sdas");
 			
 			System.out.println("Conexión establecida con el servidor");
 			
