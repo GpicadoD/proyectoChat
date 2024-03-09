@@ -41,6 +41,7 @@ public class ThreadEscritor extends Thread {
                 if (inChat) {
                     System.out.println("Mensaje: ");
                     mensaje = entrada.nextLine();
+                    out.writeObject(encrypt(mensaje, serverPublicKey));
                     if (mensaje.equalsIgnoreCase("EXIT")) {
                         inChat = false;
                         System.out.println("Saliendo del chat...");
@@ -50,7 +51,7 @@ public class ThreadEscritor extends Thread {
                     System.out.print("Comando > ");
                     mensaje = entrada.nextLine();
                     if (mensaje.equalsIgnoreCase("EXIT")) {
-                        System.out.println("Saliendo del chat...");
+                        System.out.println("Saliendo del programa...");
                         break;
                     } else {
                         parsedMensaje = mensaje.split(" ");

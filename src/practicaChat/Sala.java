@@ -1,7 +1,10 @@
 package practicaChat;
 
-import java.io.IOException;
+import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.Base64;
+
+import javax.crypto.Cipher;
 
 public class Sala {
 	private String nombre;
@@ -47,13 +50,26 @@ public class Sala {
 		return "Sala [nombre=" + nombre + ", clave=" + clave + ", usesrList=" + usesrList + "]";
 	}
 	
-	public void exitRoom() {
-		
+	public String encrypt(String mensaje, PublicKey clientPublicKey) throws Exception {
+
+		Cipher cipher = Cipher.getInstance("RSA");
+		cipher.init(Cipher.ENCRYPT_MODE, clientPublicKey);
+		byte[] encryptedBytes = cipher.doFinal(mensaje.getBytes());
+		return Base64.getEncoder().encodeToString(encryptedBytes);
 	}
 	
-	public void broadcastMessage(Usuario sender, String message) throws IOException {
+	public Usuario exitRoom(Usuario client) {
+		for (Usuario user : this.usesrList) {
+			if (user == client) {
+				return user;
+			}
+		}
+		return null;
+	}
+	
+	public void broadcastMessage(Usuario sender, String message) throws Exception {
 		for (Usuario user : usesrList) {
-			if (user != sender) user.getOut().writeObject(message);
+			if (user != sender) user.getOut().writeObject(encrypt(message, user.getPublicKey()));
 		}
 	}
 
