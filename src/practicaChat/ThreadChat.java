@@ -175,7 +175,7 @@ public class ThreadChat extends Thread {
 
 							}
 						}
-						System.out.println("te has unido a la room " + parsedMensaje[1]);
+						out.writeObject(encrypt("te has unido a la room " + parsedMensaje[1],clientPublicKey)) ;
 					} else {
 						for (Sala room : roomList) {
 							if (room.getNombre().equals(parsedMensaje[1])
