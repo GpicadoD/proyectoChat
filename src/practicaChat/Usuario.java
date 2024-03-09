@@ -1,15 +1,16 @@
 package practicaChat;
 
 import java.io.ObjectOutputStream;
+import java.security.PublicKey;
 
 public class Usuario {
 	private ObjectOutputStream out;
-	private String publicKey;
+	private PublicKey publicKey;
 
 	public Usuario() {
 	}
 
-	public Usuario(ObjectOutputStream out, String publicKey) {
+	public Usuario(ObjectOutputStream out, PublicKey publicKey) {
 		this.out = out;
 		this.publicKey = publicKey;
 	}
@@ -18,7 +19,7 @@ public class Usuario {
 		return out;
 	}
 
-	public String getPublicKey() {
+	public PublicKey getPublicKey() {
 		return publicKey;
 	}
 
@@ -26,7 +27,7 @@ public class Usuario {
 		this.out = out;
 	}
 
-	public void setPublicKey(String publicKey) {
+	public void setPublicKey(PublicKey publicKey) {
 		this.publicKey = publicKey;
 	}
 
