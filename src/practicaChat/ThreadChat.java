@@ -1,6 +1,5 @@
 package practicaChat;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -106,6 +105,21 @@ public class ThreadChat extends Thread {
 		}
 		return cadena;
 	}
+	
+	public void roomFunction(Sala room, Usuario user) throws Exception {
+		this.out.writeObject(encrypt("te has unido a la room " + room.getNombre(), user.getPublicKey())) ;
+		while(true) {
+			String mensaje = decrypt((String) in.readObject()) ;
+			if (mensaje.equalsIgnoreCase("exit")) {
+				if (room.exitRoom(user) != null) room.getUsesrList().remove(user);
+				System.out.println("Saliendo de la sala");
+				break;
+			}else {
+				room.broadcastMessage(user, mensaje);
+			}
+		}
+		
+	}
 
 	/*
 	 * Pre: --- Post:
@@ -168,14 +182,12 @@ public class ThreadChat extends Thread {
 
 					if (parsedMensaje.length == 2) {
 						for (Sala room : roomList) {
-
 							if (room.getNombre().equals(parsedMensaje[1])) {
-
 								room.getUsesrList().add(nuevoUsuario);
-
+								roomFunction(room, nuevoUsuario);
+								break;
 							}
 						}
-						out.writeObject(encrypt("te has unido a la room " + parsedMensaje[1],clientPublicKey)) ;
 					} else {
 						for (Sala room : roomList) {
 							if (room.getNombre().equals(parsedMensaje[1])
