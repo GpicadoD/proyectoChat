@@ -139,14 +139,17 @@ public class ThreadChat extends Thread {
 				} else if (parsedMensaje.length == 1 && parsedMensaje[0].equalsIgnoreCase("LIST")) {
 					System.out.println("Lista de salas publicas: ");
 					if (roomList.size() == 0) {
-						out.writeObject( encrypt("No hay salas publicas disponibles", clientPublicKey) );
+						out.writeObject(encrypt("No hay salas publicas disponibles", clientPublicKey));
 					} else {
+						String respuesta = "";
 						for (Sala room : roomList) {
 							if (room.getClave() != null) {
-								System.out.println("- " + room.getNombre() + " users "
-										+ room.getUsesrList().size());
+								respuesta =  respuesta + ("- " + room.getNombre() + " users "
+										+ room.getUsesrList().size() + "\n");
 							}
 						}
+						if (respuesta.length()>0) out.writeObject(encrypt(respuesta, clientPublicKey));
+						else out.writeObject(encrypt("No hay salas publicas disponibles", clientPublicKey));
 
 					}
 
