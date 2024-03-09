@@ -1,20 +1,20 @@
 package practicaChat;
 
-import java.io.DataOutputStream;
+import java.io.ObjectOutputStream;
 
 public class Usuario {
-	private DataOutputStream out;
+	private ObjectOutputStream out;
 	private String publicKey;
 
 	public Usuario() {
 	}
 
-	public Usuario(DataOutputStream out, String publicKey) {
+	public Usuario(ObjectOutputStream out, String publicKey) {
 		this.out = out;
 		this.publicKey = publicKey;
 	}
 
-	public DataOutputStream getOut() {
+	public ObjectOutputStream getOut() {
 		return out;
 	}
 
@@ -22,7 +22,7 @@ public class Usuario {
 		return publicKey;
 	}
 
-	public void setOut(DataOutputStream out) {
+	public void setOut(ObjectOutputStream out) {
 		this.out = out;
 	}
 

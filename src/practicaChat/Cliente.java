@@ -45,10 +45,10 @@ public class Cliente extends Conexion {
             
 //            // Enviar la clave pública al servidor
             out.writeObject(this.publicKey);
-            System.out.println(this.publicKey);
+//            System.out.println(this.publicKey);
 //            
             PublicKey clave = (PublicKey) (in.readObject());
-			System.out.println("PublicKeyServer: " + clave);
+//			System.out.println("PublicKeyServer: " + clave);
 
 			ThreadEscritor threadW = new ThreadEscritor(out, cs, clave);
 			ThreadLector threadR = new ThreadLector(in, cs,privateKey);

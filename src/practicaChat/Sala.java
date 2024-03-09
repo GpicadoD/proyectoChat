@@ -7,13 +7,14 @@ public class Sala {
 	private String clave;
 	private ArrayList<Usuario> usesrList;
 
-	public Sala() {
-	}
-
 	public Sala(String nombre, String clave, ArrayList<Usuario> usesrList) {
 		this.nombre = nombre;
 		this.clave = clave;
 		this.usesrList = usesrList;
+	}
+
+	public Sala() {
+
 	}
 
 	public String getNombre() {
