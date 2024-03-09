@@ -70,8 +70,12 @@ public class ThreadEscritor extends Thread {
                                 } else if (parsedMensaje[0].equalsIgnoreCase("CREATE")) {
 
                                     if (parsedMensaje.length > 1 && parsedMensaje.length < 4) {
-                                        if (!parsedMensaje[1].contains("#")) {
+                                        if (!parsedMensaje[1].contains("#") && parsedMensaje.length == 2) {
                                             encyptMensaje = encrypt(mensaje, serverPublicKey);
+                                            out.writeObject(encyptMensaje);
+                                        }
+                                        else if(!parsedMensaje[1].contains("#") && !parsedMensaje[2].contains("#") && parsedMensaje.length == 3) {
+                                        	encyptMensaje = encrypt(mensaje, serverPublicKey);
                                             out.writeObject(encyptMensaje);
                                         }
                                     }

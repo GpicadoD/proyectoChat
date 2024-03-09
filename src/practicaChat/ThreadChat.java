@@ -179,32 +179,37 @@ public class ThreadChat extends Thread {
 
 				} else if (parsedMensaje[0].equalsIgnoreCase("JOIN")) {
 					Usuario nuevoUsuario = new Usuario(out, clientPublicKey);
+					if(roomList.size() == 0) {
+						out.writeObject(encrypt("No hay salas para unirse", clientPublicKey));
+					}
+					else {
+						if (parsedMensaje.length == 2) {
+							for (Sala room : roomList) {
+								if (room.getNombre().equals(parsedMensaje[1])) {
+									room.getUsesrList().add(nuevoUsuario);
+									roomFunction(room, nuevoUsuario);
+									break;
+								}
+							}
+						} else {
+							for (Sala room : roomList) {
+								if (room.getNombre().equals(parsedMensaje[1])
+										&& room.getClave().equals(parsedMensaje[2])) {
+									room.getUsesrList().add(nuevoUsuario);
+								} else {
+									out.writeObject(encrypt("No se ha podido unir a la sala",clientPublicKey)); 
+								}
 
-					if (parsedMensaje.length == 2) {
-						for (Sala room : roomList) {
-							if (room.getNombre().equals(parsedMensaje[1])) {
-								room.getUsesrList().add(nuevoUsuario);
-								roomFunction(room, nuevoUsuario);
-								break;
+								if (room.getNombre().equals(parsedMensaje[1])
+										&& room.getClave().equals(parsedMensaje[2])) {
+									room.getUsesrList().add(nuevoUsuario);
+								}
+								out.writeObject(encrypt("te has unido a la room " + parsedMensaje[1]
+										+ " con la contraseña " + parsedMensaje[2],clientPublicKey)) ;
 							}
-						}
-					} else {
-						for (Sala room : roomList) {
-							if (room.getNombre().equals(parsedMensaje[1])
-									&& room.getClave().equals(parsedMensaje[2])) {
-								room.getUsesrList().add(nuevoUsuario);
-							} else {
-								out.writeObject(encrypt("No se ha podido unir a la sala",clientPublicKey)); 
-							}
-
-							if (room.getNombre().equals(parsedMensaje[1])
-									&& room.getClave().equals(parsedMensaje[2])) {
-								room.getUsesrList().add(nuevoUsuario);
-							}
-							out.writeObject(encrypt("te has unido a la room " + parsedMensaje[1]
-									+ " con la contraseña " + parsedMensaje[2],clientPublicKey)) ;
 						}
 					}
+					
 				}
 			}
 
