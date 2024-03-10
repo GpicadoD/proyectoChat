@@ -4,6 +4,8 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.security.*;
 import java.util.Base64;
+import java.util.concurrent.Semaphore;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -14,12 +16,16 @@ public class ThreadLector extends Thread {
     private ObjectInputStream in;
     private Socket cs;
     private PrivateKey privateKey;
+    private Semaphore s1;
+    private SharedData sharedData;
 
-    public ThreadLector(ObjectInputStream in, Socket cs, PrivateKey privateKey) {
+    public ThreadLector(ObjectInputStream in, Socket cs, PrivateKey privateKey, Semaphore s1, SharedData sharedData) {
         super();
         this.in = in;
         this.cs = cs;
         this.privateKey = privateKey;
+        this.s1 = s1;
+        this.sharedData = sharedData;
     }
 
     public String decrypt(String mensaje) throws NoSuchAlgorithmException, NoSuchPaddingException,
@@ -35,7 +41,11 @@ public class ThreadLector extends Thread {
         try {
             while (true) {
                 String mensaje = (String) in.readObject();
-                System.out.println(decrypt(mensaje)); 
+                mensaje = decrypt(mensaje);
+                System.out.println(mensaje);
+                if (mensaje.contains("te has unido a la sala") ) {
+                	sharedData.setInChat(true);
+                }
             }
         } catch (Exception e) {
             System.out.println(e);

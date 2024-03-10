@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.security.PublicKey;
 import java.util.Base64;
 import java.util.Scanner;
+import java.util.concurrent.Semaphore;
 
 import javax.crypto.Cipher;
 
@@ -13,12 +14,16 @@ public class ThreadEscritor extends Thread {
     private ObjectOutputStream out;
     private Socket cs;
     private PublicKey serverPublicKey;
+    private Semaphore s1;
+    private SharedData sharedData;
 
-    public ThreadEscritor(ObjectOutputStream out, Socket cs, PublicKey serverPublicKey) {
+    public ThreadEscritor(ObjectOutputStream out, Socket cs, PublicKey serverPublicKey, Semaphore s1, SharedData sharedData) {
         super();
         this.out = out;
         this.cs = cs;
         this.serverPublicKey = serverPublicKey;
+        this.s1 = s1;
+        this.sharedData = sharedData;
     }
 
     public String encrypt(String mensaje, PublicKey serverPublicKey) throws Exception {
@@ -34,16 +39,16 @@ public class ThreadEscritor extends Thread {
             Scanner entrada = new Scanner(System.in);
             String mensaje;
             String parsedMensaje[];
-            String encyptMensaje;
-            boolean inChat = false;
+            String encyptMensaje;            
 
             while (true) {
-                if (inChat) {
+            	Thread.sleep(200);
+                if (sharedData.getInChat()) {
                     System.out.println("Mensaje: ");
                     mensaje = entrada.nextLine();
                     out.writeObject(encrypt(mensaje, serverPublicKey));
                     if (mensaje.equalsIgnoreCase("EXIT")) {
-                        inChat = false;
+                    	sharedData.setInChat(false);
                         System.out.println("Saliendo del chat...");
                         continue;
                     }
@@ -65,7 +70,7 @@ public class ThreadEscritor extends Thread {
                                 } else if (parsedMensaje[0].equalsIgnoreCase("JOIN")) {
                                     encyptMensaje = encrypt(mensaje, serverPublicKey);
                                     out.writeObject(encyptMensaje);
-                                    inChat = true;
+                                    
 
                                 } else if (parsedMensaje[0].equalsIgnoreCase("CREATE")) {
 

@@ -8,6 +8,7 @@ import java.util.Scanner;
 import java.security.*;
 import javax.crypto.*;
 import java.net.SocketException;
+import java.util.concurrent.Semaphore;
 
 
 public class Cliente extends Conexion {
@@ -35,6 +36,8 @@ public class Cliente extends Conexion {
 	
 	
 	public void startClient() throws ClassNotFoundException, SocketException{
+		Semaphore s1 = new Semaphore (1);
+		SharedData sharedData = new SharedData(false);
 		try {
 			System.out.println("Asdad");
 			ObjectOutputStream out = new ObjectOutputStream(cs.getOutputStream());
@@ -51,8 +54,8 @@ public class Cliente extends Conexion {
             PublicKey serverPublicKey = (PublicKey) (in.readObject());
 
 
-			ThreadEscritor threadW = new ThreadEscritor(out, cs, serverPublicKey);
-			ThreadLector threadR = new ThreadLector(in, cs, privateKey);
+			ThreadEscritor threadW = new ThreadEscritor(out, cs, serverPublicKey, s1, sharedData);
+			ThreadLector threadR = new ThreadLector(in, cs, privateKey, s1, sharedData);
 
 			threadW.start();
 			threadR.start();
