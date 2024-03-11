@@ -200,12 +200,17 @@ public class ThreadChat extends Thread {
 
 					}
 
+					
+					
 				} else if (parsedMensaje[0].equalsIgnoreCase("JOIN")) {
 					Usuario nuevoUsuario = new Usuario(out, clientPublicKey);
 					Boolean inChat = false;
+					
+					
 					if (roomList.size() == 0) {
 						out.writeObject(encrypt("No hay salas para unirse", clientPublicKey));
 					} else {
+						
 						if (parsedMensaje.length == 2) {
 							for (Sala room : roomList) {
 								if (room.getNombre().equals(parsedMensaje[1])) {
@@ -220,31 +225,35 @@ public class ThreadChat extends Thread {
 										clientPublicKey));
 							} else
 								inChat = false;
-						} else {
+						} else if (parsedMensaje.length == 3) {
+							
 							for (Sala room : roomList) {
+								
 								if (room.getNombre().equals(parsedMensaje[1])
 										&& room.getClave().equals(parsedMensaje[2])) {
+									inChat = true;
 									room.getUsesrList().add(nuevoUsuario);
-								} else {
-									out.writeObject(encrypt("No se ha podido unir a la sala",
-											clientPublicKey));
-									out.writeObject(encrypt("No se ha podido unir a la sala",
-											clientPublicKey));
+									roomFunction(room, nuevoUsuario);
+									break;
 								}
-
-								if (room.getNombre().equals(parsedMensaje[1])
-										&& room.getClave().equals(parsedMensaje[2])) {
-									room.getUsesrList().add(nuevoUsuario);
-								}
-								out.writeObject(encrypt(
-										"te has unido a la room " + parsedMensaje[1]
-												+ " con la contraseña " + parsedMensaje[2],
-										clientPublicKey));
+								if (!inChat) {System.out.println("sdsad");
+									out.writeObject(encrypt("No existe una sala con esas condiciones",
+											clientPublicKey));
+									
+								} else
+									inChat = false;
+								
 							}
 						}
+						
+						
+						
 					}
 
 				}
+				
+				
+				
 			}
 
 		} catch (Exception e) {

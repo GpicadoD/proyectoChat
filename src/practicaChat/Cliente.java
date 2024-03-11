@@ -53,11 +53,11 @@ public class Cliente extends Conexion {
 		Semaphore s1 = new Semaphore (1);
 		SharedData sharedData = new SharedData(false);
 		try {
-			System.out.println("Asdad");
+			
 			ObjectOutputStream out = new ObjectOutputStream(cs.getOutputStream());
-			System.out.println("sadas");
+			
 			ObjectInputStream in = new ObjectInputStream(cs.getInputStream());
-			System.out.println("21Sdas");
+		
 			
 			System.out.println("Conexión establecida con el servidor");
 			
