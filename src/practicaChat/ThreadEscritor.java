@@ -11,9 +11,8 @@ import javax.crypto.Cipher;
 
 /**
  * 
- * Clase que se encarga de transmitir los mensajes encriptados del cliente al
- * servidor. Además se encarga de confirmar que los comandos recibidos son
- * correctos.
+ * Clase que se encarga de transmitir los mensajes encriptados del cliente al servidor.
+ * Además se encarga de confirmar que los comandos recibidos son correctos.
  * 
  * @author Javier Olivan y Geancarlos Picado
  *
@@ -26,8 +25,8 @@ public class ThreadEscritor extends Thread {
 	private Semaphore s1;
 	private SharedData sharedData;
 
-	public ThreadEscritor(ObjectOutputStream out, Socket cs, PublicKey serverPublicKey, Semaphore s1,
-			SharedData sharedData) {
+	public ThreadEscritor(ObjectOutputStream out, Socket cs, PublicKey serverPublicKey,
+			Semaphore s1, SharedData sharedData) {
 		super();
 		this.out = out;
 		this.cs = cs;
@@ -35,9 +34,10 @@ public class ThreadEscritor extends Thread {
 		this.s1 = s1;
 		this.sharedData = sharedData;
 	}
-
+	
 	/*
-	 * Pre: -- Post: Método que encripta el mensaje con la publicKey del servidor.
+	 * Pre: --
+	 * Post: Método que encripta el mensaje con la publicKey del servidor.
 	 */
 	public String encrypt(String mensaje, PublicKey serverPublicKey) throws Exception {
 
@@ -47,6 +47,7 @@ public class ThreadEscritor extends Thread {
 		return Base64.getEncoder().encodeToString(encryptedBytes);
 	}
 
+	
 	public void run() {
 		try {
 			Scanner entrada = new Scanner(System.in);
@@ -109,4 +110,5 @@ public class ThreadEscritor extends Thread {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 }
