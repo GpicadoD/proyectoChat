@@ -42,14 +42,13 @@ public class ThreadEscritor extends Thread {
             String encyptMensaje;            
 
             while (true) {
-            	Thread.sleep(200);
+            	Thread.sleep(100);
                 if (sharedData.getInChat()) {
                     System.out.println("Mensaje: ");
                     mensaje = entrada.nextLine();
                     out.writeObject(encrypt(mensaje, serverPublicKey));
                     if (mensaje.equalsIgnoreCase("EXIT")) {
                     	sharedData.setInChat(false);
-                        System.out.println("Saliendo del chat...");
                         continue;
                     }
                 } else {
