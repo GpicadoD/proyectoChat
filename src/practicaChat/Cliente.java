@@ -9,7 +9,15 @@ import java.security.*;
 import javax.crypto.*;
 import java.net.SocketException;
 import java.util.concurrent.Semaphore;
-
+ /**
+  * 
+  * Clase que se encarga de crear todas las variables e inicia la conexión
+  * con el servidor. Esta clase crea dos threads para separar el apartado de
+  * escritura y lectura con variables compartidas (semáforo y sharedData)
+  * 
+  * @author Javier Oliván y Geancarlos Picado
+  *
+  */
 
 public class Cliente extends Conexion {
 	
@@ -20,6 +28,10 @@ public class Cliente extends Conexion {
 		super("cliente");
 	}
 	
+	/*
+	 * Pre: ---
+	 * Post: Función que crea los objetos PublicKey y PrivateKey.
+	 */
 	public void RSACipher() {
 		try {
 			KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
@@ -33,8 +45,10 @@ public class Cliente extends Conexion {
 		}	
 	}
 	
-	
-	
+	/*
+	 * Pre: ---
+	 * Post: Función que crea los objetos PublicKey y PrivateKey
+	 */
 	public void startClient() throws ClassNotFoundException, SocketException{
 		Semaphore s1 = new Semaphore (1);
 		SharedData sharedData = new SharedData(false);

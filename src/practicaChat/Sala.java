@@ -6,6 +6,14 @@ import java.util.Base64;
 
 import javax.crypto.Cipher;
 
+/**
+ * 
+ * Clase que se encarga de crear un objeto sala, el cual contiene objetos
+ * Usuarios en una lista y todas las funciones necesarias par gestionarlos
+ * 
+ * @author Javier Oliván y Geancarlos Picado
+ *
+ */
 public class Sala {
 	private String nombre;
 	private String clave;
@@ -49,7 +57,12 @@ public class Sala {
 	public String toString() {
 		return "Sala [nombre=" + nombre + ", clave=" + clave + ", usesrList=" + usesrList + "]";
 	}
-	
+
+	/*
+	 * Pre: ---
+	 * Post: Función que encripta el mensaje que es enviado a todos los
+	 * usuarios de la lista.
+	 */
 	public String encrypt(String mensaje, PublicKey clientPublicKey) throws Exception {
 
 		Cipher cipher = Cipher.getInstance("RSA");
@@ -57,7 +70,11 @@ public class Sala {
 		byte[] encryptedBytes = cipher.doFinal(mensaje.getBytes());
 		return Base64.getEncoder().encodeToString(encryptedBytes);
 	}
-	
+
+	/*
+	 * Pre: ---
+	 * Post: Función que busca a un usuario en la sala y lo elimina.
+	 */
 	public Usuario exitRoom(Usuario client) {
 		for (Usuario user : this.usesrList) {
 			if (user == client) {
@@ -67,9 +84,14 @@ public class Sala {
 		return null;
 	}
 	
+	/*
+	 * Pre: --- 
+	 * Post: Función que envía un mensaje encriptado a todos los integrantes de la sala.
+	 */
 	public void broadcastMessage(Usuario sender, String message) throws Exception {
 		for (Usuario user : usesrList) {
-			if (user != sender) user.getOut().writeObject(encrypt(message, user.getPublicKey()));
+			if (user != sender)
+				user.getOut().writeObject(encrypt(message, user.getPublicKey()));
 		}
 	}
 

@@ -1,5 +1,13 @@
 package practicaChat;
 
+/**
+ * 
+ * Clase que contiene la información que se comparte entre los threads lector y
+ * escritor del cliente.
+ * 
+ * @author Javier Olivan y Geancarlos Picado
+ *
+ */
 public class SharedData {
 	private Boolean inChat;
 
@@ -19,6 +27,5 @@ public class SharedData {
 	public String toString() {
 		return "SharedData [inChat=" + inChat + "]";
 	}
-	
-	
+
 }

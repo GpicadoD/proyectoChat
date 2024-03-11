@@ -9,6 +9,14 @@ import java.util.concurrent.Semaphore;
 
 import javax.crypto.Cipher;
 
+/**
+ * 
+ * Clase que se encarga de transmitir los mensajes encriptados del cliente al servidor.
+ * Además se encarga de confirmar que los comandos recibidos son correctos.
+ * 
+ * @author Javier Olivan y Geancarlos Picado
+ *
+ */
 public class ThreadEscritor extends Thread {
 
 	private ObjectOutputStream out;
@@ -26,7 +34,11 @@ public class ThreadEscritor extends Thread {
 		this.s1 = s1;
 		this.sharedData = sharedData;
 	}
-
+	
+	/*
+	 * Pre: --
+	 * Post: Método que encripta el mensaje con la publicKey del servidor.
+	 */
 	public String encrypt(String mensaje, PublicKey serverPublicKey) throws Exception {
 
 		Cipher cipher = Cipher.getInstance("RSA");
@@ -35,6 +47,7 @@ public class ThreadEscritor extends Thread {
 		return Base64.getEncoder().encodeToString(encryptedBytes);
 	}
 
+	
 	public void run() {
 		try {
 			Scanner entrada = new Scanner(System.in);

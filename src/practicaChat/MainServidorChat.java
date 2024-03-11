@@ -2,6 +2,13 @@ package practicaChat;
 
 import java.io.IOException;
 
+/**
+ * 
+ * Clase que se encarga de crear un objeto servidor.
+ * 
+ * @author Javier Oliván y Geancarlos Picado
+ *
+ */
 
 public class MainServidorChat {
 	public static void main(String[] args) throws IOException {

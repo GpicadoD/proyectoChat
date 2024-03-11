@@ -3,6 +3,14 @@ package practicaChat;
 import java.io.ObjectOutputStream;
 import java.security.PublicKey;
 
+/**
+ * 
+ * Clase que contiene toda la información de los clientes que se conectana una
+ * sala.
+ * 
+ * @author Javier Olivan y Geancarlos Picado
+ *
+ */
 public class Usuario {
 	private ObjectOutputStream out;
 	private PublicKey publicKey;

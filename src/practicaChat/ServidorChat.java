@@ -6,6 +6,15 @@ import java.io.ObjectOutputStream;
 import java.util.concurrent.Semaphore;
 import java.util.ArrayList;
 
+/**
+ * 
+ * Clase que crea inicia el funcionamiento del servidor, esperando la conexión
+ * de un cliente para crear un nuevo Thread encargado de la comunicación. Aquí
+ * se crean todos las variables necesarias para el proceso de la información.
+ * 
+ * @author Javier Olivan y Geancarlos Picado
+ *
+ */
 public class ServidorChat extends Conexion {
 
 	public ServidorChat() throws IOException {
@@ -22,7 +31,8 @@ public class ServidorChat extends Conexion {
 				cs = ss.accept();
 				ObjectOutputStream outClienteChat = new ObjectOutputStream(cs.getOutputStream());
 				ObjectInputStream inClienteChat = new ObjectInputStream(cs.getInputStream());
-				ThreadChat tChat =  new ThreadChat(inClienteChat, outClienteChat, id, cs, s1, roomList);
+				ThreadChat tChat = new ThreadChat(inClienteChat, outClienteChat, id, cs, s1,
+						roomList);
 				tChat.start();
 				id++;
 			}

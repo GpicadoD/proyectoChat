@@ -2,6 +2,15 @@ package practicaChat;
 
 import java.io.IOException;
 
+/**
+ * 
+ * Clase que se encarga de crear un objeto cliente.
+ * Controla el fallo de conexión con el servidor y vuelve a intentar la conexión
+ * 
+ * @author Javier Oliván y Geancarlos Picado
+ *
+ */
+
 public class MainCliente {
 
 	public static void main(String[] args) throws InterruptedException {

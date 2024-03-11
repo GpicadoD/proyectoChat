@@ -4,6 +4,14 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * 
+ * Clase que se encarga de asignar a cada clase parámetros de conexión.
+ * 
+ * @author Javier Oliván y Geancarlos Picado
+ *
+ */
+
 public class Conexion {
 	private final int PUERTO_SERVER = 1234; // Puerto para la conexión
 

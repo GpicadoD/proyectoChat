@@ -11,6 +11,13 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+/**
+ * 
+ * Clase que se encarga de leer los mensajes del servidor, desencriptarlo, 
+ * 
+ * @author Javier Olivan y Geancarlos Picado
+ *
+ */
 public class ThreadLector extends Thread {
 
     private ObjectInputStream in;
@@ -28,6 +35,10 @@ public class ThreadLector extends Thread {
         this.sharedData = sharedData;
     }
 
+    /*
+	 * Pre: --
+	 * Post: Método que desencripta el mensaje con la privateKey del cliente.
+	 */
     public String decrypt(String mensaje) throws NoSuchAlgorithmException, NoSuchPaddingException,
             InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 
