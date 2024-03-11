@@ -48,6 +48,11 @@ public class ThreadChat extends Thread {
 		this.roomList = roomList;
 	}
 
+	/*
+	 * Pre: ---
+	 * Post: Método que crea la PublicKey y PrivateKey que se utiliza para
+	 * comunicación con el cliente que se conecta.
+	 */
 	public void RSACipher() {
 		try {
 			KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
@@ -61,18 +66,10 @@ public class ThreadChat extends Thread {
 		}
 	}
 
-	public static PublicKey bytesToPublicKey(byte[] keyBytes)
-			throws NoSuchAlgorithmException, InvalidKeySpecException {
-		KeyFactory keyFactory = KeyFactory.getInstance("RSA"); // O el algoritmo correspondiente
-
-		// Construye la especificación de la clientPublicKey a partir de los bytes
-		X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
-
-		// Genera la clientPublicKey pública a partir de la especificación de la
-		// clientPublicKey
-		return keyFactory.generatePublic(keySpec);
-	}
-
+	/*
+	 * Pre: --- 
+	 * Post: Método que desencripta el mensaje que se recibe del cliente con la privateKey.
+	 */
 	public String decrypt(String mensaje) throws NoSuchAlgorithmException, NoSuchPaddingException,
 			InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 
@@ -82,18 +79,29 @@ public class ThreadChat extends Thread {
 		return new String(cipher.doFinal(mensajeBytes));
 	}
 
+	/*
+	 * Pre: --- 
+	 * Post: Método que encripta el mensaje que se envía al usuario con su publicKey.
+	 */
 	public String encrypt(String mensaje, PublicKey clientPublicKey) throws Exception {
-
 		Cipher cipher = Cipher.getInstance("RSA");
 		cipher.init(Cipher.ENCRYPT_MODE, clientPublicKey);
 		byte[] encryptedBytes = cipher.doFinal(mensaje.getBytes());
 		return Base64.getEncoder().encodeToString(encryptedBytes);
 	}
 
+	/*
+	 * Pre: --- 
+	 * Post: Genera un numero en aleatorio dentro de un rango.
+	 */
 	public static int numeroAleatorioEnRango(int minimo, int maximo) {
 		return ThreadLocalRandom.current().nextInt(minimo, maximo + 1);
 	}
-
+	
+	/*
+	 * Pre: --- 
+	 * Post: Genera un identificador aleatorio para las salas.
+	 */
 	public String randomCode() {
 		String banco = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 		String cadena = "";
@@ -106,6 +114,11 @@ public class ThreadChat extends Thread {
 		return cadena;
 	}
 
+	/*
+	 * Pre: --- 
+	 * Post: Método que funciona como un estado, el cual se encarga de mandar los mensajes
+	 * a los usuarios dentro de la sala y del resto de comandos de la misma.
+	 */
 	public void roomFunction(Sala room, Usuario user) throws Exception {
 		this.out.writeObject(
 				encrypt("te has unido a la sala " + room.getNombre(), user.getPublicKey()));
@@ -187,12 +200,17 @@ public class ThreadChat extends Thread {
 
 					}
 
+					
+					
 				} else if (parsedMensaje[0].equalsIgnoreCase("JOIN")) {
 					Usuario nuevoUsuario = new Usuario(out, clientPublicKey);
 					Boolean inChat = false;
+					
+					
 					if (roomList.size() == 0) {
 						out.writeObject(encrypt("No hay salas para unirse", clientPublicKey));
 					} else {
+						
 						if (parsedMensaje.length == 2) {
 							for (Sala room : roomList) {
 								if (room.getNombre().equals(parsedMensaje[1])) {
@@ -203,33 +221,39 @@ public class ThreadChat extends Thread {
 								}
 							}
 							if (!inChat) {
-								out.writeObject(encrypt("No existe una sala con esas condiciones", clientPublicKey));
-							}else inChat = false;
-						} else {
-							for (Sala room : roomList) {
-								if (room.getNombre().equals(parsedMensaje[1])
-										&& room.getClave().equals(parsedMensaje[2])) {
-									room.getUsesrList().add(nuevoUsuario);
-								} else {
-									out.writeObject(encrypt("No se ha podido unir a la sala",
-											clientPublicKey));
-									out.writeObject(encrypt("No se ha podido unir a la sala",
-											clientPublicKey));
-								}
-
-								if (room.getNombre().equals(parsedMensaje[1])
-										&& room.getClave().equals(parsedMensaje[2])) {
-									room.getUsesrList().add(nuevoUsuario);
-								}
-								out.writeObject(encrypt(
-										"te has unido a la room " + parsedMensaje[1]
-												+ " con la contraseña " + parsedMensaje[2],
+								out.writeObject(encrypt("No existe una sala con esas condiciones",
 										clientPublicKey));
+							} else
+								inChat = false;
+						} else if (parsedMensaje.length == 3) {
+							
+							for (Sala room : roomList) {
+								
+								if (room.getNombre().equals(parsedMensaje[1])
+										&& room.getClave().equals(parsedMensaje[2])) {
+									inChat = true;
+									room.getUsesrList().add(nuevoUsuario);
+									roomFunction(room, nuevoUsuario);
+									break;
+								}
+								if (!inChat) {System.out.println("sdsad");
+									out.writeObject(encrypt("No existe una sala con esas condiciones",
+											clientPublicKey));
+									
+								} else
+									inChat = false;
+								
 							}
 						}
+						
+						
+						
 					}
 
 				}
+				
+				
+				
 			}
 
 		} catch (Exception e) {
