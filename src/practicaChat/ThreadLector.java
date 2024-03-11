@@ -45,6 +45,10 @@ public class ThreadLector extends Thread {
                 System.out.println(mensaje);
                 if (mensaje.contains("te has unido a la sala") ) {
                 	sharedData.setInChat(true);
+                	s1.release();
+                }else if (mensaje.equalsIgnoreCase("Saliendo de la sala")){
+                	sharedData.setInChat(false);
+                	s1.release();
                 }
             }
         } catch (Exception e) {
